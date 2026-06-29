@@ -1,0 +1,32 @@
+# Environment files (contains credentials and API keys)
+.env
+*.env
+secrets.json
+backend/.env
+
+# Python cache and temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Database files
+*.sqlite3
+*.db
