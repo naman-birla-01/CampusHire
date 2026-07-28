@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
+import os
+import shutil
 from app.database import get_db
 from app.models.user import User, RoleEnum
 from app.middleware.auth import get_current_user
@@ -55,3 +57,37 @@ def verify_student_profile(
     db: Session = Depends(get_db)
 ):
     return verify_student(student_id, verify_data, db)
+
+@router.post("/me/resume")
+async def upload_resume(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if current_user.role != RoleEnum.student:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not a student account")
+    
+    student = get_student_by_user_id(current_user.id, db)
+    
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only PDF files are allowed")
+        
+    upload_dir = "uploads/resumes"
+    os.makedirs(upload_dir, exist_ok=True)
+    file_path = os.path.join(upload_dir, f"{student.id}_{file.filename}")
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    student.resume_path = file_path
+    db.commit()
+    db.refresh(student)
+    
+    # Trigger AI analysis automatically after upload (Mock for now, will be implemented in 4.2)
+    # try:
+    #     from app.services.ai_service import analyze_resume_with_gemini
+    #     analyze_resume_with_gemini(student.id, file_path, db)
+    # except ImportError:
+    #     pass
+    
+    return {"message": "Resume uploaded successfully", "file_path": file_path}
