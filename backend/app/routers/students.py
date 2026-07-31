@@ -83,11 +83,12 @@ async def upload_resume(
     db.commit()
     db.refresh(student)
     
-    # Trigger AI analysis automatically after upload (Mock for now, will be implemented in 4.2)
-    # try:
-    #     from app.services.ai_service import analyze_resume_with_gemini
-    #     analyze_resume_with_gemini(student.id, file_path, db)
-    # except ImportError:
-    #     pass
+    # Trigger AI analysis automatically after upload
+    try:
+        from app.services.ai_service import extract_text_from_pdf, analyze_resume_with_gemini
+        resume_text = extract_text_from_pdf(file_path)
+        analyze_resume_with_gemini(student.id, resume_text, db)
+    except Exception:
+        pass  # Don't fail the upload if AI analysis encounters an error
     
     return {"message": "Resume uploaded successfully", "file_path": file_path}

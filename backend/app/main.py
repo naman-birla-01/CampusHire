@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, students, companies, jobs, applications
+from app.routers import auth, students, companies, jobs, applications, ai
 from app.database import engine
 from app.models import Base
 
@@ -26,6 +26,7 @@ app.include_router(students.router)
 app.include_router(companies.router)
 app.include_router(jobs.router)
 app.include_router(applications.router)
+app.include_router(ai.router)
 @app.get("/")
 def root():
     return {"message": "Welcome to CampusHire API"}
