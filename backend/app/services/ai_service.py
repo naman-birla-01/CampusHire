@@ -52,7 +52,7 @@ def analyze_resume_with_gemini(student_id: int, resume_text: str, db: Session):
     )
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3.6-flash')
         response = model.generate_content(prompt)
         
         # Parse the JSON response
@@ -120,7 +120,7 @@ def generate_skill_gap_report(student_id: int, job_id: int, db: Session):
     )
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3.6-flash')
         response = model.generate_content(prompt)
         
         response_text = response.text.strip()
