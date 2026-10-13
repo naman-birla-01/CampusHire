@@ -5,6 +5,7 @@ from app.schemas.auth import UserRegister, UserLogin, TokenResponse, UserRespons
 from app.services.auth_service import register_new_user, authenticate_user, get_user_profile
 from app.middleware.auth import get_current_user
 from app.models.user import User
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
@@ -14,7 +15,9 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     return {"message": "User registered successfully"}
 
 @router.post("/login", response_model=TokenResponse)
-def login(login_data: UserLogin, db: Session = Depends(get_db)):
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    # Map form_data.username to email since the dist frontend sends OAuth2 form data
+    login_data = UserLogin(email=form_data.username, password=form_data.password)
     return authenticate_user(login_data, db)
 
 @router.get("/me")

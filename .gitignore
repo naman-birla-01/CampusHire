@@ -50,4 +50,5 @@ node_modules/
 # --- Test / Temp files ---
 emails.md
 fix_bundle.py
+check_*.py
 *.log

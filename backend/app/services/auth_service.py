@@ -72,7 +72,16 @@ def authenticate_user(login_data: UserLogin, db: Session):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user account")
     
     access_token = create_access_token(data={"sub": user.email, "role": user.role.value})
-    return {"access_token": access_token, "token_type": "bearer", "role": user.role.value}
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer", 
+        "role": user.role.value,
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role.value
+        }
+    }
 
 def get_user_profile(user: User, db: Session):
     if user.role == RoleEnum.student:
