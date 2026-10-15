@@ -256,6 +256,26 @@ h1, h2, h3, h4, h5, h6 {
 .btn-lg { padding: 12px 24px; font-size: 1rem; border-radius: var(--radius-md); }
 .btn-full { width: 100%; }
 
+.btn-success {
+  background: var(--color-success);
+  color: #fff;
+  border-color: var(--color-success);
+}
+.btn-success:hover:not(:disabled) {
+  background: #059669;
+  border-color: #059669;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+}
+.btn-danger:hover:not(:disabled) {
+  background: #DC2626;
+  border-color: #DC2626;
+}
+
 .btn-icon {
   width: 36px;
   height: 36px;
